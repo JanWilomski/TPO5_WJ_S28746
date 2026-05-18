@@ -21,8 +21,6 @@ public class GameService {
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
 
-
-
     @Transactional(readOnly = true)
     public List<Game> findRecent(int limit){
         return gameRepository.findAllByOrderByPlayedAtDesc()
