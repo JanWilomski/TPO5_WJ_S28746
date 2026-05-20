@@ -2,6 +2,7 @@ package com.wilomski.ligarodzynkow.controller;
 
 import com.wilomski.ligarodzynkow.dto.CreatePlayerDto;
 import com.wilomski.ligarodzynkow.dto.PlayerDto;
+import com.wilomski.ligarodzynkow.dto.UpdatePlayerDto;
 import com.wilomski.ligarodzynkow.entity.Player;
 import com.wilomski.ligarodzynkow.service.PlayerService;
 import jakarta.validation.Valid;
@@ -31,5 +32,11 @@ public class PlayersDataController {
     @DeleteMapping("/{id}")
     void deletePlayer(@PathVariable UUID id){
         playerService.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public PlayerDto changePlayerName(@PathVariable UUID id, @RequestBody @Valid UpdatePlayerDto dto){
+        PlayerDto updated = playerService.changePlayerName(id, dto.name());
+        return new PlayerDto(updated.id(), updated.name());
     }
 }

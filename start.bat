@@ -1,0 +1,1 @@
+call mvnw.cmd spring-boot:run -Pproduction

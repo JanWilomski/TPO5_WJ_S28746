@@ -1,5 +1,6 @@
 package com.wilomski.ligarodzynkow.service;
 
+import com.wilomski.ligarodzynkow.dto.PlayerDto;
 import com.wilomski.ligarodzynkow.entity.Player;
 import com.wilomski.ligarodzynkow.repository.GamePlayerRepository;
 import com.wilomski.ligarodzynkow.repository.PlayerRepository;
@@ -42,5 +43,13 @@ public class PlayerService {
             throw new IllegalArgumentException("Can't delete player with games");
         }
         playerRepository.delete(player);
+    }
+
+    @Transactional
+    public PlayerDto changePlayerName(UUID playerId, String name){
+        Player player = playerRepository.findById(playerId).orElseThrow();
+        player.setName(name.trim());
+        playerRepository.save(player);
+        return new PlayerDto(player.getId(), player.getName());
     }
 }

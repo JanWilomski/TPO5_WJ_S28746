@@ -1,5 +1,7 @@
 package com.wilomski.ligarodzynkow.service;
 
+import com.wilomski.ligarodzynkow.dto.GameDto;
+import com.wilomski.ligarodzynkow.dto.PlayerDto;
 import com.wilomski.ligarodzynkow.entity.Game;
 import com.wilomski.ligarodzynkow.entity.GamePlayer;
 import com.wilomski.ligarodzynkow.entity.Player;
@@ -22,15 +24,16 @@ public class GameService {
     private final PlayerRepository playerRepository;
 
     @Transactional(readOnly = true)
-    public List<Game> findRecent(int limit){
+    public List<GameDto> findRecent(int limit){
         return gameRepository.findAllByOrderByPlayedAtDesc()
                 .stream()
                 .limit(Math.min(limit, 100))
+                .map(this::toDto)
                 .toList();
     }
 
     @Transactional
-    public Game create(int teamAScore, int teamBScore, List<UUID> teamAPlayerIds, List<UUID> teamBPlayerIds){
+    public GameDto create(int teamAScore, int teamBScore, List<UUID> teamAPlayerIds, List<UUID> teamBPlayerIds){
         if(teamAScore < 0 || teamBScore < 0){
             throw new IllegalArgumentException("Team score cannot be below 0");
         }
@@ -66,7 +69,6 @@ public class GameService {
         game.setTeamAScore(teamAScore);
         game.setTeamBScore(teamBScore);
         game.setPlayedAt(LocalDateTime.now());
-        game.setId(UUID.randomUUID());
 
         Map<UUID, Player> playerById = players.stream()
                 .collect(Collectors.toMap(Player::getId, p -> p));
@@ -92,7 +94,8 @@ public class GameService {
             game.getGamePlayers().add(gp);
         }
 
-        return gameRepository.save(game);
+        Game saved = gameRepository.save(game);
+        return toDto(saved);
     }
 
 
@@ -100,5 +103,29 @@ public class GameService {
     public void delete(UUID gameId) {
         Game game = gameRepository.findById(gameId).orElseThrow();
         gameRepository.delete(game);
+    }
+
+    private GameDto toDto(Game game) {
+        List<PlayerDto> teamA = game.getGamePlayers().stream()
+                .filter(gp -> gp.getTeam() == Team.A)
+                .map(gp -> new PlayerDto(gp.getPlayer().getId(), gp.getPlayer().getName()))
+                .toList();
+        List<PlayerDto> teamB = game.getGamePlayers().stream()
+                .filter(gp -> gp.getTeam() == Team.B)
+                .map(gp -> new PlayerDto(gp.getPlayer().getId(), gp.getPlayer().getName()))
+                .toList();
+        return new GameDto(game.getId(), game.getTeamAScore(), game.getTeamBScore(),
+                game.getPlayedAt(), teamA, teamB);
+    }
+
+    @Transactional
+    public GameDto updateScores(UUID gameId, int teamAScore, int teamBScore) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+
+        game.setTeamAScore(teamAScore);
+        game.setTeamBScore(teamBScore);
+
+        Game saved = gameRepository.save(game);
+        return toDto(saved);
     }
 }
