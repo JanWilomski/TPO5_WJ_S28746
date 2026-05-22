@@ -11,6 +11,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.wilomski.ligarodzynkow.dto.GameDto;
 import com.wilomski.ligarodzynkow.dto.PlayerDto;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@PageTitle("Liga Rodzynków")
 @Route(value = "history", layout = MainLayout.class)
 public class HistoryView extends VerticalLayout{
     private final Grid<GameDto> grid;

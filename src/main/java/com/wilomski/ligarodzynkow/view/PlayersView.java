@@ -8,12 +8,14 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.wilomski.ligarodzynkow.dto.PlayerDto;
 import com.wilomski.ligarodzynkow.service.PlayerService;
 
 import java.util.List;
 
+@PageTitle("Liga Rodzynków")
 @Route(value = "players", layout = MainLayout.class)
 public class PlayersView extends VerticalLayout {
     private final Grid<PlayerDto> grid;

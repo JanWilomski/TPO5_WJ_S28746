@@ -9,6 +9,8 @@ import com.vaadin.flow.router.RouteAlias;
 import com.wilomski.ligarodzynkow.dto.RankingDto;
 import com.wilomski.ligarodzynkow.service.RankingService;
 
+import java.util.Comparator;
+
 @PageTitle("Liga Rodzynków")
 @Route(value = "ranking", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
@@ -22,14 +24,16 @@ public class RankingView extends VerticalLayout {
 
         add(new H1("Ranking"));
         Grid<RankingDto> grid = new Grid<>();
-        grid.addColumn(RankingDto::rank).setHeader("Pozycja").setAutoWidth(true);
-        grid.addColumn(RankingDto::playerName).setHeader("Gracz").setAutoWidth(true);
+        grid.addColumn(RankingDto::rank).setHeader("Pozycja").setAutoWidth(true).setSortable(true);
+        grid.addColumn(RankingDto::playerName).setHeader("Gracz").setAutoWidth(true).setSortable(true);
         grid.addColumn(
                 g -> String.format("%.2f", g.winrate()*100)
-        ).setHeader("Winrate %").setAutoWidth(true);
-        grid.addColumn(RankingDto::gamesPlayed).setHeader("Mecze").setAutoWidth(true);
-        grid.addColumn(RankingDto::gamesWon).setHeader("Wygrane").setAutoWidth(true);
-        grid.addColumn(RankingDto::gamesLost).setHeader("Przegrane").setAutoWidth(true);
+                )
+                .setHeader("Winrate %").setAutoWidth(true).setSortable(true)
+                .setComparator(Comparator.comparing(RankingDto::winrate));;
+        grid.addColumn(RankingDto::gamesPlayed).setHeader("Mecze").setAutoWidth(true).setSortable(true);
+        grid.addColumn(RankingDto::gamesWon).setHeader("Wygrane").setAutoWidth(true).setSortable(true);
+        grid.addColumn(RankingDto::gamesLost).setHeader("Przegrane").setAutoWidth(true).setSortable(true);
 
         grid.setItems(rankingService.getRanking());
 
