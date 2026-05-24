@@ -20,8 +20,8 @@ public class GamePlayerId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GamePlayerId gp)) return false;
-        return Objects.equals(gameId, gp.gameId) && Objects.equals(playerId, gp.playerId);
+        if (!(o instanceof GamePlayerId that)) return false;
+        return Objects.equals(gameId, that.gameId) && Objects.equals(playerId, that.playerId);
     }
 
     @Override
