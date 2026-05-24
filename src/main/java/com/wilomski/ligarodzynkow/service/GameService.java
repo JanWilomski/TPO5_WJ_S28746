@@ -9,6 +9,7 @@ import com.wilomski.ligarodzynkow.entity.Team;
 import com.wilomski.ligarodzynkow.repository.GameRepository;
 import com.wilomski.ligarodzynkow.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,5 +128,13 @@ public class GameService {
 
         Game saved = gameRepository.save(game);
         return toDto(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameDto> findAll(Sort sort){
+        return gameRepository.findAll(sort)
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 }

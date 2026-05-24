@@ -7,6 +7,8 @@ import com.wilomski.ligarodzynkow.entity.Player;
 import com.wilomski.ligarodzynkow.service.PlayerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class PlayersDataController {
     private final PlayerService playerService;
 
     @GetMapping
-    public List<PlayerDto> getAllPlayers(){
-        return playerService.findAll().stream().map(player -> (new PlayerDto(player.getId(), player.getName()))).toList();
+    public List<PlayerDto> getAllPlayers(@SortDefault(sort = "name", direction = Sort.Direction.ASC) Sort sort){
+        return playerService.findAll(sort).stream().map(player -> (new PlayerDto(player.getId(), player.getName()))).toList();
     }
 
     @PostMapping

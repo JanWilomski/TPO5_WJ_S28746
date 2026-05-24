@@ -5,6 +5,7 @@ import com.wilomski.ligarodzynkow.entity.Player;
 import com.wilomski.ligarodzynkow.repository.GamePlayerRepository;
 import com.wilomski.ligarodzynkow.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,11 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
     private final GamePlayerRepository gamePlayerRepository;
+
+    @Transactional(readOnly = true)
+    public List<Player> findAll(Sort sort) {
+        return playerRepository.findAll(sort);
+    }
 
     @Transactional(readOnly = true)
     public List<Player> findAll() {

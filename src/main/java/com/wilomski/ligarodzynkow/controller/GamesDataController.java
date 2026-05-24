@@ -9,6 +9,8 @@ import com.wilomski.ligarodzynkow.entity.Team;
 import com.wilomski.ligarodzynkow.service.GameService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,8 +24,9 @@ public class GamesDataController {
     private final GameService gameService;
 
     @GetMapping
-    public List<GameDto> getAllGames(){
-        return gameService.findRecent(100);
+    public List<GameDto> getAllGames(
+            @SortDefault(sort = "playedAt", direction = Sort.Direction.DESC) Sort sort) {
+        return gameService.findAll(sort);
     }
 
     @PostMapping
